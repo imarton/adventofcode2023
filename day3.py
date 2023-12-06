@@ -2,7 +2,7 @@ import logging
 import re
 import sys
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
 
 def getPartNumberSum(schema):
@@ -34,6 +34,52 @@ def getPartNumberSum(schema):
     return result
 
 
+def getGearRationSum(schema):
+    result = 0
+    width = len(schema[0])
+    schema.insert(0, '.' * width)
+    schema.append('.' * width)
+    height = len(schema)
+    patternStar = re.compile(r'\*')  # szimbólum keresése
+    patternNum = re.compile(r'\d+')  # összefüggő számjegyek
+
+    y = 1  # a 0. és az utolsó sort kihagyjuk
+    while y < height - 1:
+        logging.debug('\n%s %s', y, schema[y])
+        matches = patternStar.finditer(schema[y])
+        lineRatio = 0
+        for match in matches:
+            ratio = 1
+            sp = match.start()  # start position
+            logging.debug('\n%s (%s)', match.group(), sp)
+            tmp = []
+            matchesNums = patternNum.finditer(schema[y-1])
+            for m in matchesNums:
+                if m.start()-1 <= sp <= m.end():
+                    tmp.append(m.group())
+                    ratio *= int(m.group())
+
+            matchesNums = patternNum.finditer(schema[y])
+            for m in matchesNums:
+                # logging.debug('%s (%s:%s)', m.group(), m.start(), m.end())
+                if m.start() == sp+1 or sp == m.end():
+                    tmp.append(m.group())
+                    ratio *= int(m.group())
+
+            matchesNums = patternNum.finditer(schema[y + 1])
+            for m in matchesNums:
+                if m.start() - 1 <= sp <= m.end():
+                    tmp.append(m.group())
+                    ratio *= int(m.group())
+            if len(tmp) == 2:
+                lineRatio += ratio
+            logging.debug('* kapcsolatai: %s\nsor ratio: %s\nlineRatio: %s', tmp, ratio, lineRatio)
+        result += lineRatio
+        y += 1
+
+    return result
+
+
 if __name__ == '__main__':
     result = 0
     f = open("day3_input.txt", "r")
@@ -48,5 +94,7 @@ if __name__ == '__main__':
     f.close()
 
     result = getPartNumberSum(schematic)
-    print(result)
-    # 546312 - jó
+    print('Part1:', result)
+
+    result = getGearRationSum(schematic)
+    print('Part2:', result)
