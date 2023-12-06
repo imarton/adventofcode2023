@@ -10,23 +10,18 @@ def getPartNumberSum(schema):
     height = len(schema)
     y = 1   # a 0. és az utolsó sort kihagyjuk
     while y < height-1:
-        partSum = 0
         print('\n', y, schema[y])
         p1 = re.findall(r"(\d+)", schema[y])
         p = set(p1)
-        dupl = (len(p) == len(p1))
         for n in p:
             x = schema[y].find(n)
             while x != -1:
                 area = schema[y-1][x-1: x+len(n)+1] + "\n" + schema[y][x-1: x+len(n)+1] + "\n" + schema[y+1][x-1: x+len(n)+1]
-                if dupl:
-                    print(area)
+                print(area)
                 p = re.search(r'[^\d\.\n]', area)
                 if p is not None:
-                    if dupl:
-                        print('---------------> ', int(n), '-', n, p.group())
+                    print('---------------> ', int(n), '-', n, p.group())
                     result += int(n)
-                    partSum += int(n)
                 x = schema[y].find(n, x+len(n)+1)
         # print(y, ". sor: ",partSum)
         y += 1
