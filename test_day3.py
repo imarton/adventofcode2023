@@ -1,7 +1,10 @@
+import logging
 import re
 from unittest import TestCase
 
 import day3
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class Test(TestCase):
@@ -10,7 +13,7 @@ class Test(TestCase):
         schematic = []
 
         while True:
-            line = f.readline()
+            line = f.readline().replace('\n', '').replace('\r', '')
             if len(line) == 0:
                 break
             schematic.append('.' + line + '.')
@@ -24,7 +27,7 @@ class Test(TestCase):
         schematic = []
 
         while True:
-            line = f.readline()
+            line = f.readline().replace('\n', '').replace('\r', '')
             if len(line) == 0:
                 break
             schematic.append('.' + line + '.')

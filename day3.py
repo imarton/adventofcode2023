@@ -1,4 +1,8 @@
+import logging
 import re
+import sys
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def getPartNumberSum(schema):
@@ -6,27 +10,26 @@ def getPartNumberSum(schema):
     width = len(schema[0])
     schema.insert(0, '.' * width)
     schema.append('.' * width)
-
     height = len(schema)
+    patternNum = re.compile(r'\d+')  #összefüggő számjegyek
+    patternSymbol = re.compile(r'[^\d\.\n]')  #szimbólum keresése
+
     y = 1   # a 0. és az utolsó sort kihagyjuk
     while y < height-1:
-        print('\n', y, schema[y])
-        p1 = re.findall(r"(\d+)", schema[y])
-        p = set(p1)
-        for n in p:
-            x = schema[y].find(n)
-            while x != -1:
-                area = schema[y-1][x-1: x+len(n)+1] + "\n" + schema[y][x-1: x+len(n)+1] + "\n" + schema[y+1][x-1: x+len(n)+1]
-                print(area)
-                p = re.search(r'[^\d\.\n]', area)
-                if p is not None:
-                    print('---------------> ', int(n), '-', n, p.group())
-                    result += int(n)
-                x = schema[y].find(n, x+len(n)+1)
-        # print(y, ". sor: ",partSum)
-        y += 1
+        logging.debug('\n%s %s', y, schema[y])
+        matches = patternNum.finditer(schema[y])
+        for match in matches:
+            sp = match.start()  #start position
+            ep = match.end()    #end position
+            logging.debug('\n%s (%s-%s)', match.group(), sp, ep)
+            area = schema[y - 1][sp - 1: ep + 1] + "\n" + schema[y][sp - 1: ep + 1] + "\n" + schema[y + 1][sp - 1: ep + 1]
+            logging.debug('\n'+area)
+            m =patternSymbol.search(area)
+            if m is not None:
+                result += int(match.group())
+                logging.info('----> %s %s', match.group(), m.group())
 
-    # print(p)
+        y += 1
 
     return result
 
