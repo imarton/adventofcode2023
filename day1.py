@@ -38,7 +38,7 @@ while True:
         break
 
     x = getCalibrationValue2(line)
-    print(line, ' -- ', x)
+    # print(line, ' -- ', x)
     result += x
 
 f.close()
