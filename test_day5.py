@@ -4,8 +4,12 @@ import day5
 
 
 class Test(TestCase):
-    def test_load_data(self):
+    @classmethod
+    def setUpClass(cls):
         day5.loadData("day5_sample.txt")
+
+    def test_load_data(self):
+        # day5.loadData("day5_sample.txt")
         self.assertEqual([79, 14, 55, 13], day5.seeds)
 
         self.assertIn((50, 52, 48), day5.seed_to_soil)
@@ -17,12 +21,12 @@ class Test(TestCase):
         self.assertIn((56, 60, 37), day5.humidity_to_location)
 
     def test_get_lowest(self):
-        day5.loadData("day5_sample.txt")
+        # day5.loadData("day5_sample.txt")
 
         self.assertEqual(35, day5.getLowest())
 
     def test_get_mapped_value(self):
-        day5.loadData("day5_sample.txt")
+        # day5.loadData("day5_sample.txt")
 
         self.assertEqual(50, day5.getMappedValue(98, day5.seed_to_soil))
         self.assertEqual(51, day5.getMappedValue(99, day5.seed_to_soil))
@@ -30,8 +34,13 @@ class Test(TestCase):
         self.assertEqual(53, day5.getMappedValue(51, day5.seed_to_soil))
 
     def test_get_location(self):
-        day5.loadData("day5_sample.txt")
+        # day5.loadData("day5_sample.txt")
         self.assertEqual(82, day5.getLocation(79))
         self.assertEqual(43, day5.getLocation(14))
         self.assertEqual(86, day5.getLocation(55))
         self.assertEqual(35, day5.getLocation(13))
+
+    def test_get_lowest2(self):
+        # day5.loadData("day5_sample.txt")
+        self.assertEqual(46, day5.getLowest2())
+

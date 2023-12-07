@@ -53,6 +53,7 @@ def getMappedValue(value, map):
     for m in map:
         if m[0] <= value < m[0]+m[2]:
             ret = m[1] + (value - m[0])
+            break
 
     return ret
 
@@ -79,7 +80,23 @@ def getLowest():
     return result
 
 
+def getLowest2():
+    result = 'N/A'
+    idx = 0
+    while idx < len(seeds):
+        for i in range(seeds[idx+1]):
+            sid = seeds[idx]+i
+            v = getLocation(sid)
+            if 'N/A' == result:
+                result = v
+            elif result > v:
+                result = v
+        idx += 2
+
+    return result
+
+
 if __name__ == '__main__':
     loadData("day5_input.txt")
     print('Part1:', getLowest())
-    # print('Part2:', getDeckSize("day4_input.txt"))
+    print('Part2:', getLowest2())
