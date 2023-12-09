@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+import math
 
 
 def loadData(filename):
@@ -35,9 +36,35 @@ def getNumberOfBeating(races):
     return result
 
 
+def numOfWin2(race):
+    b = race[0]
+    c = race[1]
+    # print(f'axˇ2 - bx + c = 0 --> xˇ2 - {b}x + {c} = 0')
+    d = b * b - 4 * 1 * c
+    x1 = (b - math.sqrt(d)) / (2 * 1)
+    x2 = (b + math.sqrt(d)) / (2 * 1)
+
+    return int(x2) - int(x1)
+
+def loadData2(filename):
+    with open(filename) as f:
+        text = f.readlines()
+
+        row1 = text[0].replace(' ', '').split(':')[1]
+        row2 = text[1].replace(' ', '').split(':')[1]
+
+    return int(row1), int(row2)
+
+
 if __name__ == '__main__':
     races = loadData("day6_input.txt")
-    print('Part1:', getNumberOfBeating(races))
-    print('start:', datetime.datetime.now())
-    print('Part2:', numOfWin((49787980, 298118510661181)))
-    print('end:', datetime.datetime.now())
+    print('   Part1:', getNumberOfBeating(races))
+    t0 = datetime.now()
+
+    print('start:', t0)
+    race = loadData2("day6_input.txt")
+    print('   Part2:', numOfWin(race))
+    t1 = datetime.now()
+    print('mid:', t1-t0, '(elapsed time)')
+    print('   Part2 alternativ:', numOfWin2(race))
+    print('end:', datetime.now() - t1, '(elapsed time)')
