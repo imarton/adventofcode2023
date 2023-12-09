@@ -1,9 +1,10 @@
+import datetime
+
 
 def loadData(filename):
     races = []
     with open(filename) as f:
         d = f.readlines()
-        print(d)
         row1 = list(filter(None, d[0].split(' ')))
         row2 = list(filter(None, d[1].split(' ')))
         for i in range(len(row1)):
@@ -37,4 +38,6 @@ def getNumberOfBeating(races):
 if __name__ == '__main__':
     races = loadData("day6_input.txt")
     print('Part1:', getNumberOfBeating(races))
-    # print('Part2:')
+    print('start:', datetime.datetime.now())
+    print('Part2:', numOfWin((49787980, 298118510661181)))
+    print('end:', datetime.datetime.now())
