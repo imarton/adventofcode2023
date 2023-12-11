@@ -4,6 +4,7 @@
 game = []
 handtypes = ['Five of a kind', 'Four of a kind', 'Full house', 'Three of a kind', 'Two pair', 'One pair', 'High card']
 cardvalues = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14}
+cardvalues2 = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 1, 'Q': 12, 'K': 13, 'A': 14}
 
 
 class Hand:
@@ -40,7 +41,6 @@ class Hand:
                 return False
 
 
-
 def getType(cards):
     charCount = [cards.count(c) for c in set(cards)]
 
@@ -65,6 +65,29 @@ def getType(cards):
         return 6
 
 
+def getTypeJoker(cards):
+    """
+    Típus meghatározása az új Joker szabály figyelembe vétele mellett
+    :param cards:
+    :return:
+    """
+    if 'J' not in cards or 'JJJJJ' == cards:
+        return getType(cards)
+
+    charCount = {c: cards.count(c) for c in set(cards)}
+    max = None
+    for c in charCount:
+        if 'J' == c:
+            continue
+
+        if max is None or charCount[c] > charCount[max]:
+            max = c
+
+    tmp = cards.replace('J', max)
+
+    return getType(tmp)
+
+
 def getTotalPrice():
     tmp = []
     for h in game:
@@ -84,12 +107,9 @@ def getTotalPrice():
 
     sum = 0
     for i, h in enumerate(tmp):
-        sum += (i+1)*h.bid
+        sum += (i + 1) * h.bid
 
     return sum
-
-
-
 
 
 def loadDatas(filename):
@@ -99,6 +119,17 @@ def loadDatas(filename):
             game.append(Hand(cards, int(bid), getType(cards)))
 
 
+def loadDatas2(filename):
+    with open(filename, 'r') as f:
+        for row in f:
+            cards, bid = row.split(' ')
+            game.append(Hand(cards, int(bid), getTypeJoker(cards)))
+
+
 if __name__ == '__main__':
     loadDatas('day7_input.txt')
     print('part1: ', getTotalPrice())
+
+    game = []
+    loadDatas2('day7_input.txt')
+    print('part2: ', getTotalPrice())
