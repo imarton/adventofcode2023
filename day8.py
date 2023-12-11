@@ -29,9 +29,10 @@ def stepsSimultan():
         for j in range(len(locs)):
             locs[j] = map1[locs[j]][direction[i]]
             if locs[j][-1] == 'Z':
-                s += locs[j]
+                s += str(st - lastz[j])
+                lastz[j] = st
             else:
-                s += '\t'
+                s += '\t\t'
         if len(s.strip()) != 0:
             print(st, '.', s)
 
@@ -39,6 +40,8 @@ def stepsSimultan():
         i += 1
         if i == len(direction):
             i = 0
+        if st > 100_000:
+            break
 
     return st
 
