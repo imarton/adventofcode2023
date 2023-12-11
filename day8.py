@@ -1,3 +1,5 @@
+from datetime import datetime
+
 direction = ''
 map1 = {}
 
@@ -14,6 +16,38 @@ def steps():
             i = 0
 
     return st
+
+
+def stepsSimultan():
+    st = 0
+    i = 0
+    locs = list(filter(lambda m: m.endswith('A'), map1.keys()))
+    lastz = [0 for l in locs]
+    print('start points:', len(locs), locs)
+    while not isAllZ(locs):
+        s = ''
+        for j in range(len(locs)):
+            locs[j] = map1[locs[j]][direction[i]]
+            if locs[j][-1] == 'Z':
+                s += locs[j]
+            else:
+                s += '\t'
+        if len(s.strip()) != 0:
+            print(st, '.', s)
+
+        st += 1
+        i += 1
+        if i == len(direction):
+            i = 0
+
+    return st
+
+
+def isAllZ(locs):
+    for loc in locs:
+        if not loc.endswith('Z'):
+            return False
+    return True
 
 
 def loadData(filename):
@@ -41,3 +75,8 @@ def loadData(filename):
 if __name__ == "__main__":
     loadData('day8_input.txt')
     print('Part1:', steps())
+    t0 = datetime.now()
+    print('start:', t0)
+    print('Part2:', stepsSimultan())
+    t1 = datetime.now()
+    print('end:', t1, ' elapsed time:', t1 - t0)
