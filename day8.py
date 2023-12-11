@@ -1,3 +1,4 @@
+import math
 from datetime import datetime
 
 direction = ''
@@ -19,12 +20,12 @@ def steps():
 
 
 def stepsSimultan():
-    st = 0
+    st = 1
     i = 0
     locs = list(filter(lambda m: m.endswith('A'), map1.keys()))
     lastz = [0 for l in locs]
     print('start points:', len(locs), locs)
-    while not isAllZ(locs):
+    while not isAllNonZero(lastz):
         s = ''
         for j in range(len(locs)):
             locs[j] = map1[locs[j]][direction[i]]
@@ -33,22 +34,25 @@ def stepsSimultan():
                 lastz[j] = st
             else:
                 s += '\t\t'
-        if len(s.strip()) != 0:
-            print(st, '.', s)
+        # if len(s.strip()) != 0:
+        #     print(st, '.', s)
 
         st += 1
         i += 1
         if i == len(direction):
             i = 0
-        if st > 100_000:
-            break
 
-    return st
+    print(lastz)
+    result = lastz[0]
+    for n in lastz[1:]:
+        result = math.lcm(result, n)
+
+    return result
 
 
-def isAllZ(locs):
-    for loc in locs:
-        if not loc.endswith('Z'):
+def isAllNonZero(nums):
+    for n in nums:
+        if n == 0:
             return False
     return True
 
