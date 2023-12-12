@@ -12,3 +12,5 @@ class Test(TestCase):
         self.assertEqual(28, day9.nextElem([1, 3, 6, 10, 15, 21]))
         self.assertEqual(68, day9.nextElem([10, 13, 16, 21, 30, 45]))
 
+    def test_prediction2(self):
+        self.assertEqual(2, day9.prediction2("day9_sample.txt"))
