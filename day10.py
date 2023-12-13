@@ -57,8 +57,9 @@ def step(node):
         tmp = (node.point[0] + shift[0], node.point[1] + shift[1])
         if node.fromn is None or tmp != node.fromn.point:
             n = Node(tmp, pipemap[tmp[1]][tmp[0]])
-            n.fromn = node  # set previous elem
-            node.to = n  # set next elem
+            # create link between actual and next element:
+            n.fromn = node
+            node.to = n
             return n
 
 

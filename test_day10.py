@@ -17,7 +17,7 @@ class Test(TestCase):
 
     def test_step(self):
         start = day10.loaddata("day10_sample.txt")
-        node = day10.step(day10.Node((1, 4), '|'), day10.Node(start, 'S'))
+        node = day10.step(day10.Node((1, 4), '|', fromn=day10.Node(start, 'S')))
         self.assertEqual('L', node.type)
 
     def test_first_step(self):
