@@ -116,18 +116,32 @@ def nest(startp):
 
     # --- check the tiles
     y = 0
-    inside = False
+
     for row in pipemap:
+        inside = False
+        pair = ''
         for x in range(1, len(row)):
             tmp = (x, y)
-            if (x, y) in path and (x - 1, y) not in path and (x + 1, y) not in path:  # pl .|.
-                inside = not inside
-            elif (x, y) in path and (x - 1, y) in path and path[(x, y)].to != path[(x - 1, y)] and path[(x, y)].fromn != path[(x - 1, y)]:  # .||. de nem .F7. vagy .LJ.
-                inside = not inside
-            elif (x, y) in path and (x + 1, y) in path and path[(x, y)].to != path[(x + 1, y)] and path[(x, y)].fromn != path[(x + 1, y)]:  # .||. de nem .F7. vagy .LJ.
-                inside = not inside
-            # elif ((x, y) in path and (x+1, y) not in path) or ((x, y) not in path and (x-1, y) in path):
-            #     inside = not inside
+            if (x, y) in path:
+                if pair == '' and path[(x, y)].type in ('L', 'F', '7', 'J'):
+                    pair = path[(x, y)].type
+                if pair != '' and path[(x, y)].type == '|':
+                    pair = ''
+                if (pair == 'F' and path[(x, y)].type == '7') or (pair == 'L' and path[(x, y)].type == 'J'):
+                    pair = ''
+
+                if path[(x, y)].type == '|':
+                    inside = not inside
+                elif path[(x, y)].type in ('L', 'F'):
+                    if (pair == '7' and path[(x, y)].type == 'L') or (pair == 'J' and path[(x, y)].type == 'F'):
+                        pair = ''
+                    else:
+                        inside = not inside
+                elif path[(x, y)].type in ('7', 'J'):
+                    if (pair == 'L' and path[(x, y)].type == '7') or (pair == 'F' and path[(x, y)].type == 'J'):
+                        pair = ''
+                    else:
+                        inside = not inside
 
             if inside and (x, y) not in path:
                 count += 1
@@ -135,7 +149,6 @@ def nest(startp):
         y += 1
 
     visualise(path)
-
 
     return count
 
@@ -149,7 +162,8 @@ def visualise(path):
             print(tile, end='')
         print()
 
+
 if __name__ == "__main__":
     startPoint = loaddata("day10_input.txt")
     print("Part1:", farthest(startPoint))
-    # print("Part2:", nest(startPoint))
+    print("Part2:", nest(startPoint))

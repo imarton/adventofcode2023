@@ -33,6 +33,10 @@ class Test(TestCase):
         start = day10.loaddata("day10_sample3.txt")
         self.assertEqual(8, day10.nest(start))
 
+    def test_nest4(self):
+        start = day10.loaddata("day10_sample4.txt")
+        self.assertEqual(10, day10.nest(start))
+
     # def test_csak(self):
     #     print(chr(0x250F), chr(0x2501), chr(0x2513), sep='')
     #     print(chr(0x2503), ' ', chr(0x2503), sep='')
