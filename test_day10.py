@@ -24,3 +24,17 @@ class Test(TestCase):
         start = day10.loaddata("day10_sample.txt")
         node = day10.firstStep(day10.Node(start, 'S'))
         self.assertIn(node.type, '|J')
+
+    def test_nest(self):
+        start = day10.loaddata("day10_sample2.txt")
+        self.assertEqual(4, day10.nest(start))
+
+    def test_nest2(self):
+        start = day10.loaddata("day10_sample3.txt")
+        self.assertEqual(8, day10.nest(start))
+
+    # def test_csak(self):
+    #     print(chr(0x250F), chr(0x2501), chr(0x2513), sep='')
+    #     print(chr(0x2503), ' ', chr(0x2503), sep='')
+    #     print(chr(0x2517), chr(0x2501), chr(0x251B), sep='')
+
