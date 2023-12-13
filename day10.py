@@ -15,9 +15,11 @@ pipes = {'|': [(0, 1), (0, -1)],
 
 
 class Node:
-    def __init__(self, point, type):
+    def __init__(self, point, type, to=None, fromn=None):
         self.point = point  # point (x, y)
         self.type = type  # type of pipe: |, L, F, J, 7, -
+        self.to = to
+        self.fromn = fromn
 
     def __str__(self):
         return f"{self.type} {self.point}"
@@ -41,20 +43,23 @@ def firstStep(startnode):
         xs = startnode.point[0]
         ys = startnode.point[1]
         if pipemap[ys][xs + 1] in '-J7':
-            return Node((xs + 1, ys), pipemap[ys][xs + 1])
+            return Node((xs + 1, ys), pipemap[ys][xs + 1], fromn=startnode)
         elif pipemap[ys][xs - 1] in '-FL':
-            return Node((xs - 1, ys), pipemap[ys][xs - 1])
+            return Node((xs - 1, ys), pipemap[ys][xs - 1], fromn=startnode)
         if pipemap[ys + 1][xs] in '|LJ':
-            return Node((xs, ys + 1), pipemap[ys + 1][xs])
+            return Node((xs, ys + 1), pipemap[ys + 1][xs], fromn=startnode)
         elif pipemap[ys - 1][xs] in '|F7':
-            return Node((xs, ys - 1), pipemap[ys - 1][xs])
+            return Node((xs, ys - 1), pipemap[ys - 1][xs], fromn=startnode)
 
 
-def step(node, prevnode):
+def step(node):
     for shift in pipes[node.type]:
         tmp = (node.point[0] + shift[0], node.point[1] + shift[1])
-        if prevnode is None or tmp != prevnode.point:
-            return Node(tmp, pipemap[tmp[1]][tmp[0]])
+        if node.fromn is None or tmp != node.fromn.point:
+            n = Node(tmp, pipemap[tmp[1]][tmp[0]])
+            n.fromn = node  # set previous elem
+            node.to = n  # set next elem
+            return n
 
 
 def farthest(startp):
@@ -62,12 +67,11 @@ def farthest(startp):
     path = []
 
     node = firstStep(startnode)
-    prevnode = startnode
     while node != startnode:
-        if path:  # list is not empty
-            prevnode = path[-1]
         path.append(node)
-        node = step(node, prevnode)
+        node = step(node)
+    else:
+        startnode.fromn = node.fromn  # close the pipe loop
 
     # len(path) = 20 --> 10
     # len(path) = 21 --> 11
