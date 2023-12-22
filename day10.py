@@ -164,6 +164,6 @@ def visualise(path):
 
 
 if __name__ == "__main__":
-    startPoint = loaddata("day10_input.txt")
+    startPoint = loaddata("advent10.txt")
     print("Part1:", farthest(startPoint))
     print("Part2:", nest(startPoint))
