@@ -110,9 +110,32 @@ def arrangements(filename):
     return sum
 
 
+def unfold(pattern, groups):
+    pattern = '?'.join([pattern for i in range(5)])
+    groups = ','.join([groups for i in range(5)])
+    return pattern, groups
+
+
+def arrangements2(filename):
+    sum = 0
+    with open(filename, 'r') as f:
+        i = 1
+        for row in f:
+            pattern, groups = row.replace('\n', '').split(' ')
+            pattern, groups = unfold(pattern, groups)
+            groups = [int(i) for i in groups.split(',')]
+            sum += process(pattern, groups)
+            i += 1
+        print(i)
+    return sum
+
+
 if __name__ == "__main__":
     t0 = datetime.now()
     print('start:', t0)
-    print('Part1:', arrangements('day12_input.txt'))  # 8544 túl magas
+    print('Part1:', arrangements('day12_input.txt'))
     t1 = datetime.now()
-    print('end:', t1, ' elapsed time:', t1 - t0)
+    print('end1:', t1, ' elapsed time:', t1 - t0)
+    print('Part2:', arrangements2('day12_input.txt'))
+    t2 = datetime.now()
+    print('end2:', t2, ' elapsed time:', t2 - t1)
