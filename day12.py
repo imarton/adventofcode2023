@@ -124,9 +124,12 @@ def arrangements2(filename):
             pattern, groups = row.replace('\n', '').split(' ')
             pattern, groups = unfold(pattern, groups)
             groups = [int(i) for i in groups.split(',')]
-            sum += process(pattern, groups)
+            t0 = datetime.now()
+            x = process(pattern, groups)
+            t1 = datetime.now()
+            sum += x
+            print(f"{i}. {x} elapsed time:{t1 - t0}")
             i += 1
-        print(i)
     return sum
 
 
