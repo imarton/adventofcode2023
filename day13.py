@@ -2,48 +2,49 @@ from datetime import datetime
 
 cnt = 1
 
+
 def is_reflect(array, position):
-    max = len(array)-position
+    max = len(array) - position
     if max > position:
         max = position
     for i in range(max):
-        if array[position-1-i] != array[position+i]:
+        if array[position - 1 - i] != array[position + i]:
             return False
     return True
 
 
 def reflectPositions(array):
     tmp = set()
-    for i in range(1, len(array)-1):
+    for i in range(1, len(array)):
         if is_reflect(array, i):
             tmp.add(i)
     return tmp
 
 
-def visualizer(table, x, y, f2):
+def visualizer(table, x, y):
     global cnt
     width = len(table[0])
-    print(f"{cnt}.  x={x}, y={y}", file=f2)
+    print(f"{cnt}.  x={x}, y={y}")
     cnt += 1
     for j in range(len(table)):
 
         if j == y and y != 0:
-            print('-'*width, file=f2)
+            print('-' * width)
 
         for i in range(width):
             c = table[j][i]
             if c == '.':
                 c = '_'  # chr(0xFF3F)
             if i == x and x != 0:
-                print('|'+c, end='', file=f2)
+                print('|' + c, end='')
             else:
-                print(c, end='', file=f2)
+                print(c, end='')
 
-        print('', file=f2)
-    print('\n\n', file=f2)
+        print('')
+    print('\n\n')
 
 
-def process(table, f2):
+def process(table):
     mirrors_x = None
     mirrors_y = None
     for row in table:
@@ -67,27 +68,26 @@ def process(table, f2):
     if mirrors_y:
         y = mirrors_y.pop()
 
-    visualizer(table, x, y, f2)
+    # visualizer(table, x, y)
 
-    return x + 100*y
+    return x + 100 * y
 
 
 def findMirrors(filename):
     table = []
     value = 0
-    with open('day13_visu.txt', 'w') as f2:
-        with open(filename, 'r') as f:
-            for row in f:
-                row = row.replace('\n', '')
-                if not row:  # if the row is empty -> process the table and create a new
-                    value += process(table, f2)
-                    table = []
-                else:
-                    table.append(row)
-
-            if table:  # process the last table (there is no empty line at the end of the file)
-                value += process(table, f2)
+    with open(filename, 'r') as f:
+        for row in f:
+            row = row.replace('\n', '')
+            if not row:  # if the row is empty -> process the table and create a new
+                value += process(table)
                 table = []
+            else:
+                table.append(row)
+
+        if table:  # process the last table (there is no empty line at the end of the file)
+            value += process(table)
+            table = []
 
     return value
 
