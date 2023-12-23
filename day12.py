@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 
+pattern_db = {}
 
 def check(sample, groups, isFirst=False, startpos=0):
     """
@@ -13,6 +14,9 @@ def check(sample, groups, isFirst=False, startpos=0):
     if it does then return index of group end in the sample e.g: 3
     """
     if len(groups) == 1 and sample.count('#') != groups[0]:  # last elem
+        return -1
+
+    if sum(groups) > sample.count('#')+sample.count('?'):
         return -1
 
     spring = '#' * groups[0]
@@ -58,11 +62,17 @@ def merge(pattern, groupsize, startposition):
 
 
 def process(pattern, groups, dept=0):
+    key_str = pattern + ' ' + ','.join([str(n) for n in groups])
+    if key_str in pattern_db:
+        return pattern_db[key_str]
+
     if len(pattern) < groups[0]:
+        pattern_db[key_str] = 0
         return 0
 
     spring = '#' * groups[0]
     if '?' not in pattern and spring not in pattern:
+        pattern_db[key_str] = 0
         return 0
 
     # if '?' not in pattern:
@@ -82,12 +92,11 @@ def process(pattern, groups, dept=0):
         if endOfSegment == -1:
             continue
         elif len(groups) == 1:
-            # visu(sample, '', '', dept)
             cnt += 1
         else:
-            # visu(sample, '', '', dept)
             cnt += process(pattern[endOfSegment + 1:], groups[1:], dept + 1)
     # if cnt > 0: visu(pattern, groups, cnt, dept)
+    pattern_db[key_str] = cnt
     return cnt
 
 
@@ -124,11 +133,12 @@ def arrangements2(filename):
             pattern, groups = row.replace('\n', '').split(' ')
             pattern, groups = unfold(pattern, groups, 5)
             groups = [int(i) for i in groups.split(',')]
-            t0 = datetime.now()
+            pattern_db.clear()
+            # t0 = datetime.now()
             x = process(pattern, groups)
-            t1 = datetime.now()
+            # t1 = datetime.now()
             sum += x
-            print(f"{i}. {x} elapsed time:{t1 - t0}")
+            # print(f"{i}. {x} elapsed time:{t1 - t0}")
             i += 1
     return sum
 
@@ -157,6 +167,6 @@ if __name__ == "__main__":
     print('Part1:', arrangements('day12_input.txt'))
     t1 = datetime.now()
     print('end1:', t1, ' elapsed time:', t1 - t0)
-    print('Part2:', arrangements3('day12_input.txt'))
+    print('Part2:', arrangements2('day12_input.txt'))
     t2 = datetime.now()
     print('end2:', t2, ' elapsed time:', t2 - t1)

@@ -29,6 +29,10 @@ class Test(TestCase):
         self.assertEqual(10, day12.process('?###????????', [3, 2, 1]))
         self.assertEqual(1, day12.process('???#??#?#?#?..', [1, 7]))
 
+        pattern, groups = day12.unfold('???????##?????#?#?', '9, 6', 5)
+        groups = [int(i) for i in groups.split(',')]
+        self.assertEqual(35982, day12.process(pattern, groups))
+
     def test_check(self):
         self.assertEqual(2, day12.check('###', [3], True))
         self.assertEqual(2, day12.check('###.', [3], True))
@@ -55,9 +59,9 @@ class Test(TestCase):
         self.assertEqual('Error', day12.merge('.?#?.', 3, 2))
 
     def test_unfold(self):
-        self.assertEqual(('.#?.#?.#?.#?.#', '1,1,1,1,1'), day12.unfold('.#', '1'))
+        self.assertEqual(('.#?.#?.#?.#?.#', '1,1,1,1,1'), day12.unfold('.#', '1', 5))
         self.assertEqual(('???.###????.###????.###????.###????.###', '1,1,3,1,1,3,1,1,3,1,1,3,1,1,3'),
-                         day12.unfold('???.###', '1,1,3'))
+                         day12.unfold('???.###', '1,1,3', 5))
 
     def test_arrangements2(self):
         self.assertEqual(525152, day12.arrangements2('day12_sample.txt'))
