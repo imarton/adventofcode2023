@@ -110,9 +110,9 @@ def arrangements(filename):
     return sum
 
 
-def unfold(pattern, groups):
-    pattern = '?'.join([pattern for i in range(5)])
-    groups = ','.join([groups for i in range(5)])
+def unfold(pattern, groups, count):
+    pattern = '?'.join([pattern for i in range(count)])
+    groups = ','.join([groups for i in range(count)])
     return pattern, groups
 
 
@@ -122,7 +122,7 @@ def arrangements2(filename):
         i = 1
         for row in f:
             pattern, groups = row.replace('\n', '').split(' ')
-            pattern, groups = unfold(pattern, groups)
+            pattern, groups = unfold(pattern, groups, 5)
             groups = [int(i) for i in groups.split(',')]
             t0 = datetime.now()
             x = process(pattern, groups)
@@ -133,12 +133,30 @@ def arrangements2(filename):
     return sum
 
 
+def arrangements3(filename):
+    sum = 0
+    with open(filename, 'r') as f:
+        i = 1
+        for row in f:
+            pattern, groups = row.replace('\n', '').split(' ')
+            p1 = process(pattern, [int(i) for i in groups.split(',')])
+
+            pattern, groups = unfold(pattern, groups, 2)
+            groups = [int(i) for i in groups.split(',')]
+            p2 = process(pattern, groups)
+            x = (p2/p1)**4 * p1
+            print(i, '. ', x)
+            sum += x
+            i += 1
+    return sum
+
+
 if __name__ == "__main__":
     t0 = datetime.now()
     print('start:', t0)
     print('Part1:', arrangements('day12_input.txt'))
     t1 = datetime.now()
     print('end1:', t1, ' elapsed time:', t1 - t0)
-    print('Part2:', arrangements2('day12_input.txt'))
+    print('Part2:', arrangements3('day12_input.txt'))
     t2 = datetime.now()
     print('end2:', t2, ' elapsed time:', t2 - t1)

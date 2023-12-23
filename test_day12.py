@@ -61,3 +61,6 @@ class Test(TestCase):
 
     def test_arrangements2(self):
         self.assertEqual(525152, day12.arrangements2('day12_sample.txt'))
+
+    def test_arrangements3(self):
+        self.assertEqual(525152, day12.arrangements3('day12_sample.txt'))
