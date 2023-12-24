@@ -53,22 +53,25 @@ def getKeyForValue(pos_dict, value):
 
 
 def process(table):
+    global smudge
     mirrors_x = {}
     mirrors_y = {}
+    table_height = len(table)
+    table_width = len(table[0])
 
     for row in table:
         tmp = reflectPositions(row)
         for n in tmp:
             mirrors_x[n] = mirrors_x.setdefault(n, 0) + 1
 
-    for i in range(len(table[0])):
-        col = ''.join(table[j][i] for j in range(len(table)))
+    for i in range(table_width):
+        col = ''.join(table[j][i] for j in range(table_height))
         tmp = reflectPositions(col)
         for n in tmp:
             mirrors_y[n] = mirrors_y.setdefault(n, 0) + 1
 
-    x = getKeyForValue(mirrors_x, len(table))
-    y = getKeyForValue(mirrors_y, len(table[0]))
+    x = getKeyForValue(mirrors_x, table_height-1 if smudge else table_height)
+    y = getKeyForValue(mirrors_y, table_width-1 if smudge else table_width)
 
     # visualizer(table, x, y)
 
