@@ -6,7 +6,8 @@ import day13
 class Test(TestCase):
     def test_find_mirrors(self):
         self.assertEqual(405, day13.findMirrors('day13_sample.txt'))
-        self.assertEqual(14, day13.findMirrors('day13_sample2.txt'))
+        day13.smudge = True
+        self.assertEqual(400, day13.findMirrors('day13_sample.txt'))
 
     def test_is_reflect(self):
         self.assertTrue(day13.is_reflect('#.##..##.', 5))

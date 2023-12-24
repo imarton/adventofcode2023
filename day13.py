@@ -1,6 +1,7 @@
 from datetime import datetime
 
 cnt = 1
+smudge = False
 
 
 def is_reflect(array, position):
@@ -44,29 +45,30 @@ def visualizer(table, x, y):
     print('\n\n')
 
 
+def getKeyForValue(pos_dict, value):
+    for key in pos_dict.keys():
+        if value == pos_dict[key]:
+            return key
+    return 0
+
+
 def process(table):
-    mirrors_x = None
-    mirrors_y = None
+    mirrors_x = {}
+    mirrors_y = {}
+
     for row in table:
         tmp = reflectPositions(row)
-        if mirrors_x is None:
-            mirrors_x = tmp
-        else:
-            mirrors_x = mirrors_x.intersection(tmp)
+        for n in tmp:
+            mirrors_x[n] = mirrors_x.setdefault(n, 0) + 1
 
     for i in range(len(table[0])):
         col = ''.join(table[j][i] for j in range(len(table)))
         tmp = reflectPositions(col)
-        if mirrors_y is None:
-            mirrors_y = tmp
-        else:
-            mirrors_y = mirrors_y.intersection(tmp)
+        for n in tmp:
+            mirrors_y[n] = mirrors_y.setdefault(n, 0) + 1
 
-    x, y = 0, 0
-    if mirrors_x:
-        x = mirrors_x.pop()
-    if mirrors_y:
-        y = mirrors_y.pop()
+    x = getKeyForValue(mirrors_x, len(table))
+    y = getKeyForValue(mirrors_y, len(table[0]))
 
     # visualizer(table, x, y)
 
@@ -98,6 +100,7 @@ if __name__ == "__main__":
     print('Part1:', findMirrors('day13_input.txt'))  # 21272 is too low
     t1 = datetime.now()
     print('end1:', t1, ' elapsed time:', t1 - t0)
-    # print('Part2:', findMirrors('day13_input.txt'))
-    # t2 = datetime.now()
-    # print('end2:', t2, ' elapsed time:', t2 - t1)
+    smudge = True
+    print('Part2:', findMirrors('day13_input.txt'))
+    t2 = datetime.now()
+    print('end2:', t2, ' elapsed time:', t2 - t1)
